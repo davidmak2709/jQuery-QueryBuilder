@@ -6,18 +6,18 @@
  * @param {string} [options.icon_checked='glyphicon glyphicon-checked']
  * @param {string} [options.icon_unchecked='glyphicon glyphicon-unchecked']
  */
-QueryBuilder.define('not-group', function(options) {
+QueryBuilder.define('not-group', function (options) {
     var self = this;
 
     // Bind events
-    this.on('afterInit', function() {
-        self.$el.on('click.queryBuilder', '[data-not=group]', function() {
+    this.on('afterInit', function () {
+        self.$el.on('click.queryBuilder', '[data-not=group]', function () {
             var $group = $(this).closest(QueryBuilder.selectors.group_container);
             var group = self.getModel($group);
             group.not = !group.not;
         });
 
-        self.model.on('update', function(e, node, field) {
+        self.model.on('update', function (e, node, field) {
             if (node instanceof Group && field === 'not') {
                 self.updateGroupNot(node);
             }
@@ -25,42 +25,44 @@ QueryBuilder.define('not-group', function(options) {
     });
 
     // Init "not" property
-    this.on('afterAddGroup', function(e, group) {
+    this.on('afterAddGroup', function (e, group) {
         group.__.not = false;
     });
 
     // Modify templates
     if (!options.disable_template) {
-        this.on('getGroupTemplate.filter', function(h) {
+        this.on('getGroupTemplate.filter', function (h) {
             var $h = $($.parseHTML(h.value));
             $h.find(QueryBuilder.selectors.condition_container).prepend(
-                '<button type="button" class="btn btn-xs btn-default" data-not="group">' +
-                '<i class="' + options.icon_unchecked + '"></i> ' + self.translate('NOT') +
-                '</button>'
+                `
+                <button type="button" class="t-Button t-Button--icon t-Button--iconLeft" data-not="group">
+                    <span aria-hidden="true" class="t-Icon t-Icon--left ${options.icon_unchecked}"></span>${self.translate('NOT')}
+                </button>
+                `
             );
             h.value = $h.prop('outerHTML');
         });
     }
 
     // Export "not" to JSON
-    this.on('groupToJson.filter', function(e, group) {
+    this.on('groupToJson.filter', function (e, group) {
         e.value.not = group.not;
     });
 
     // Read "not" from JSON
-    this.on('jsonToGroup.filter', function(e, json) {
+    this.on('jsonToGroup.filter', function (e, json) {
         e.value.not = !!json.not;
     });
 
     // Export "not" to SQL
-    this.on('groupToSQL.filter', function(e, group) {
+    this.on('groupToSQL.filter', function (e, group) {
         if (group.not) {
             e.value = 'NOT ( ' + e.value + ' )';
         }
     });
 
     // Parse "NOT" function from sqlparser
-    this.on('parseSQLNode.filter', function(e) {
+    this.on('parseSQLNode.filter', function (e) {
         if (e.value.name && e.value.name.toUpperCase() == 'NOT') {
             e.value = e.value.arguments.value[0];
 
@@ -78,19 +80,19 @@ QueryBuilder.define('not-group', function(options) {
     });
 
     // Request to create sub-group if the "not" flag is set
-    this.on('sqlGroupsDistinct.filter', function(e, group, data, i) {
+    this.on('sqlGroupsDistinct.filter', function (e, group, data, i) {
         if (data.not && i > 0) {
             e.value = true;
         }
     });
 
     // Read "not" from parsed SQL
-    this.on('sqlToGroup.filter', function(e, data) {
+    this.on('sqlToGroup.filter', function (e, data) {
         e.value.not = !!data.not;
     });
 
     // Export "not" to Mongo
-    this.on('groupToMongo.filter', function(e, group) {
+    this.on('groupToMongo.filter', function (e, group) {
         var key = '$' + group.condition.toLowerCase();
         if (group.not && e.value[key]) {
             e.value = { '$nor': [e.value] };
@@ -98,7 +100,7 @@ QueryBuilder.define('not-group', function(options) {
     });
 
     // Parse "$nor" operator from Mongo
-    this.on('parseMongoNode.filter', function(e) {
+    this.on('parseMongoNode.filter', function (e) {
         var keys = Object.keys(e.value);
 
         if (keys[0] == '$nor') {
@@ -108,12 +110,12 @@ QueryBuilder.define('not-group', function(options) {
     });
 
     // Read "not" from parsed Mongo
-    this.on('mongoToGroup.filter', function(e, data) {
+    this.on('mongoToGroup.filter', function (e, data) {
         e.value.not = !!data.not;
     });
 }, {
-    icon_unchecked: 'glyphicon glyphicon-unchecked',
-    icon_checked: 'glyphicon glyphicon-check',
+    icon_unchecked: 'fa fa-square-o',
+    icon_checked: 'fa fa-check-square',
     disable_template: false
 });
 
@@ -135,11 +137,11 @@ QueryBuilder.extend(/** @lends module:plugins.NotGroup.prototype */ {
      * @fires module:plugins.NotGroup.afterUpdateGroupNot
      * @private
      */
-    updateGroupNot: function(group) {
+    updateGroupNot: function (group) {
         var options = this.plugins['not-group'];
         group.$el.find('>' + QueryBuilder.selectors.group_not)
             .toggleClass('active', group.not)
-            .find('i').attr('class', group.not ? options.icon_checked : options.icon_unchecked);
+            .find('span').attr('class', group.not ? options.icon_checked : options.icon_unchecked);
 
         /**
          * After the group's not flag has been modified

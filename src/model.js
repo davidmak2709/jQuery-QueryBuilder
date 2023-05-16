@@ -24,7 +24,7 @@ $.extend(Model.prototype, /** @lends Model.prototype */ {
      * @param {string} type
      * @returns {$.Event}
      */
-    trigger: function(type) {
+    trigger: function (type) {
         var event = new $.Event(type);
         this.$.triggerHandler(event, Array.prototype.slice.call(arguments, 1));
         return event;
@@ -36,7 +36,7 @@ $.extend(Model.prototype, /** @lends Model.prototype */ {
      * @param {function} cb
      * @returns {Model}
      */
-    on: function() {
+    on: function () {
         this.$.on.apply(this.$, Array.prototype.slice.call(arguments));
         return this;
     },
@@ -47,7 +47,7 @@ $.extend(Model.prototype, /** @lends Model.prototype */ {
      * @param {function} [cb]
      * @returns {Model}
      */
-    off: function() {
+    off: function () {
         this.$.off.apply(this.$, Array.prototype.slice.call(arguments));
         return this;
     },
@@ -58,7 +58,7 @@ $.extend(Model.prototype, /** @lends Model.prototype */ {
      * @param {function} cb
      * @returns {Model}
      */
-    once: function() {
+    once: function () {
         this.$.one.apply(this.$, Array.prototype.slice.call(arguments));
         return this;
     }
@@ -71,7 +71,7 @@ $.extend(Model.prototype, /** @lends Model.prototype */ {
  * @param {Node} [parent]
  * @param {jQuery} $el
  */
-var Node = function(parent, $el) {
+var Node = function (parent, $el) {
     if (!(this instanceof Node)) {
         return new Node(parent, $el);
     }
@@ -143,10 +143,10 @@ Utils.defineModelProperties(Node, ['level', 'error', 'data', 'flags']);
 
 Object.defineProperty(Node.prototype, 'parent', {
     enumerable: true,
-    get: function() {
+    get: function () {
         return this.__.parent;
     },
-    set: function(value) {
+    set: function (value) {
         this.__.parent = value;
         this.level = value === null ? 1 : value.level + 1;
         this.model = value === null ? null : value.model;
@@ -157,7 +157,7 @@ Object.defineProperty(Node.prototype, 'parent', {
  * Checks if this Node is the root
  * @returns {boolean}
  */
-Node.prototype.isRoot = function() {
+Node.prototype.isRoot = function () {
     return (this.level === 1);
 };
 
@@ -165,7 +165,7 @@ Node.prototype.isRoot = function() {
  * Returns the node position inside its parent
  * @returns {int}
  */
-Node.prototype.getPos = function() {
+Node.prototype.getPos = function () {
     if (this.isRoot()) {
         return -1;
     }
@@ -178,7 +178,7 @@ Node.prototype.getPos = function() {
  * Deletes self
  * @fires Model.model:drop
  */
-Node.prototype.drop = function() {
+Node.prototype.drop = function () {
     var model = this.model;
 
     if (!!this.parent) {
@@ -203,7 +203,7 @@ Node.prototype.drop = function() {
  * @param {Node} target
  * @fires Model.model:move
  */
-Node.prototype.moveAfter = function(target) {
+Node.prototype.moveAfter = function (target) {
     if (!this.isRoot()) {
         this.move(target.parent, target.getPos() + 1);
     }
@@ -214,7 +214,7 @@ Node.prototype.moveAfter = function(target) {
  * @param {Group} [target]
  * @fires Model.model:move
  */
-Node.prototype.moveAtBegin = function(target) {
+Node.prototype.moveAtBegin = function (target) {
     if (!this.isRoot()) {
         if (target === undefined) {
             target = this.parent;
@@ -229,7 +229,7 @@ Node.prototype.moveAtBegin = function(target) {
  * @param {Group} [target]
  * @fires Model.model:move
  */
-Node.prototype.moveAtEnd = function(target) {
+Node.prototype.moveAtEnd = function (target) {
     if (!this.isRoot()) {
         if (target === undefined) {
             target = this.parent;
@@ -245,7 +245,7 @@ Node.prototype.moveAtEnd = function(target) {
  * @param {int} index
  * @fires Model.model:move
  */
-Node.prototype.move = function(target, index) {
+Node.prototype.move = function (target, index) {
     if (!this.isRoot()) {
         if (typeof target === 'number') {
             index = target;
@@ -277,7 +277,7 @@ Node.prototype.move = function(target, index) {
  * @param {Group} [parent]
  * @param {jQuery} $el
  */
-var Group = function(parent, $el) {
+var Group = function (parent, $el) {
     if (!(this instanceof Group)) {
         return new Group(parent, $el);
     }
@@ -307,10 +307,10 @@ Utils.defineModelProperties(Group, ['condition']);
 /**
  * Removes group's content
  */
-Group.prototype.empty = function() {
-    this.each('reverse', function(rule) {
+Group.prototype.empty = function () {
+    this.each('reverse', function (rule) {
         rule.drop();
-    }, function(group) {
+    }, function (group) {
         group.drop();
     });
 };
@@ -318,7 +318,7 @@ Group.prototype.empty = function() {
 /**
  * Deletes self
  */
-Group.prototype.drop = function() {
+Group.prototype.drop = function () {
     this.empty();
     Node.prototype.drop.call(this);
 };
@@ -327,7 +327,7 @@ Group.prototype.drop = function() {
  * Returns the number of children
  * @returns {int}
  */
-Group.prototype.length = function() {
+Group.prototype.length = function () {
     return this.rules.length;
 };
 
@@ -339,7 +339,7 @@ Group.prototype.length = function() {
  * @returns {Node} the inserted node
  * @fires Model.model:add
  */
-Group.prototype.insertNode = function(node, index, trigger) {
+Group.prototype.insertNode = function (node, index, trigger) {
     if (index === undefined) {
         index = this.length();
     }
@@ -369,7 +369,7 @@ Group.prototype.insertNode = function(node, index, trigger) {
  * @returns {Group}
  * @fires Model.model:add
  */
-Group.prototype.addGroup = function($el, index) {
+Group.prototype.addGroup = function ($el, index) {
     return this.insertNode(new Group(this, $el), index, true);
 };
 
@@ -380,7 +380,7 @@ Group.prototype.addGroup = function($el, index) {
  * @returns {Rule}
  * @fires Model.model:add
  */
-Group.prototype.addRule = function($el, index) {
+Group.prototype.addRule = function ($el, index) {
     return this.insertNode(new Rule(this, $el), index, true);
 };
 
@@ -388,7 +388,7 @@ Group.prototype.addRule = function($el, index) {
  * Deletes a specific Node
  * @param {Node} node
  */
-Group.prototype.removeNode = function(node) {
+Group.prototype.removeNode = function (node) {
     var index = this.getNodePos(node);
     if (index !== -1) {
         node.parent = null;
@@ -401,7 +401,7 @@ Group.prototype.removeNode = function(node) {
  * @param {Node} node
  * @returns {int}
  */
-Group.prototype.getNodePos = function(node) {
+Group.prototype.getNodePos = function (node) {
     return this.rules.indexOf(node);
 };
 
@@ -419,7 +419,7 @@ Group.prototype.getNodePos = function(node) {
  * @param {object} [context] - context for callbacks
  * @returns {boolean} if the iteration has been stopped by a callback
  */
-Group.prototype.each = function(reverse, cbRule, cbGroup, context) {
+Group.prototype.each = function (reverse, cbRule, cbGroup, context) {
     if (typeof reverse !== 'boolean' && typeof reverse !== 'string') {
         context = cbGroup;
         cbGroup = cbRule;
@@ -431,7 +431,7 @@ Group.prototype.each = function(reverse, cbRule, cbGroup, context) {
     var i = reverse ? this.rules.length - 1 : 0;
     var l = reverse ? 0 : this.rules.length - 1;
     var c = reverse ? -1 : 1;
-    var next = function() {
+    var next = function () {
         return reverse ? i >= l : i <= l;
     };
     var stop = false;
@@ -460,7 +460,7 @@ Group.prototype.each = function(reverse, cbRule, cbGroup, context) {
  * @param {boolean} [recursive=false]
  * @returns {boolean}
  */
-Group.prototype.contains = function(node, recursive) {
+Group.prototype.contains = function (node, recursive) {
     if (this.getNodePos(node) !== -1) {
         return true;
     }
@@ -469,9 +469,9 @@ Group.prototype.contains = function(node, recursive) {
     }
     else {
         // the loop will return with false as soon as the Node is found
-        return !this.each(function() {
+        return !this.each(function () {
             return true;
-        }, function(group) {
+        }, function (group) {
             return !group.contains(node, true);
         });
     }
@@ -485,7 +485,7 @@ Group.prototype.contains = function(node, recursive) {
  * @param {Group} parent
  * @param {jQuery} $el
  */
-var Rule = function(parent, $el) {
+var Rule = function (parent, $el) {
     if (!(this instanceof Rule)) {
         return new Rule(parent, $el);
     }
@@ -529,7 +529,7 @@ Utils.defineModelProperties(Rule, ['filter', 'operator', 'value']);
  * Checks if this Node is the root
  * @returns {boolean} always false
  */
-Rule.prototype.isRoot = function() {
+Rule.prototype.isRoot = function () {
     return false;
 };
 

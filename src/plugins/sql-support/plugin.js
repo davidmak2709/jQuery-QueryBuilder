@@ -5,7 +5,7 @@
  * @param {object} [options]
  * @param {boolean} [options.boolean_as_integer=true] - `true` to convert boolean values to integer in the SQL output
  */
-QueryBuilder.define('sql-support', function(options) {
+QueryBuilder.define('sql-support', function (options) {
 
 }, {
     boolean_as_integer: true
@@ -38,19 +38,19 @@ QueryBuilder.defaults({
 
     // operators for SQL -> internal conversion
     sqlRuleOperator: {
-        '=': function(v) {
+        '=': function (v) {
             return {
                 val: v,
                 op: v === '' ? 'is_empty' : 'equal'
             };
         },
-        '!=': function(v) {
+        '!=': function (v) {
             return {
                 val: v,
                 op: v === '' ? 'is_not_empty' : 'not_equal'
             };
         },
-        'LIKE': function(v) {
+        'LIKE': function (v) {
             if (v.slice(0, 1) == '%' && v.slice(-1) == '%') {
                 return {
                     val: v.slice(1, -1),
@@ -73,7 +73,7 @@ QueryBuilder.defaults({
                 Utils.error('SQLParse', 'Invalid value for LIKE operator "{0}"', v);
             }
         },
-        'NOT LIKE': function(v) {
+        'NOT LIKE': function (v) {
             if (v.slice(0, 1) == '%' && v.slice(-1) == '%') {
                 return {
                     val: v.slice(1, -1),
@@ -96,37 +96,37 @@ QueryBuilder.defaults({
                 Utils.error('SQLParse', 'Invalid value for NOT LIKE operator "{0}"', v);
             }
         },
-        'IN': function(v) {
+        'IN': function (v) {
             return { val: v, op: 'in' };
         },
-        'NOT IN': function(v) {
+        'NOT IN': function (v) {
             return { val: v, op: 'not_in' };
         },
-        '<': function(v) {
+        '<': function (v) {
             return { val: v, op: 'less' };
         },
-        '<=': function(v) {
+        '<=': function (v) {
             return { val: v, op: 'less_or_equal' };
         },
-        '>': function(v) {
+        '>': function (v) {
             return { val: v, op: 'greater' };
         },
-        '>=': function(v) {
+        '>=': function (v) {
             return { val: v, op: 'greater_or_equal' };
         },
-        'BETWEEN': function(v) {
+        'BETWEEN': function (v) {
             return { val: v, op: 'between' };
         },
-        'NOT BETWEEN': function(v) {
+        'NOT BETWEEN': function (v) {
             return { val: v, op: 'not_between' };
         },
-        'IS': function(v) {
+        'IS': function (v) {
             if (v !== null) {
                 Utils.error('SQLParse', 'Invalid value for IS operator');
             }
             return { val: null, op: 'is_null' };
         },
-        'IS NOT': function(v) {
+        'IS NOT': function (v) {
             if (v !== null) {
                 Utils.error('SQLParse', 'Invalid value for IS operator');
             }
@@ -136,47 +136,47 @@ QueryBuilder.defaults({
 
     // statements for internal -> SQL conversion
     sqlStatements: {
-        'question_mark': function() {
+        'question_mark': function () {
             var params = [];
             return {
-                add: function(rule, value) {
+                add: function (rule, value) {
                     params.push(value);
                     return '?';
                 },
-                run: function() {
+                run: function () {
                     return params;
                 }
             };
         },
 
-        'numbered': function(char) {
+        'numbered': function (char) {
             if (!char || char.length > 1) char = '$';
             var index = 0;
             var params = [];
             return {
-                add: function(rule, value) {
+                add: function (rule, value) {
                     params.push(value);
                     index++;
                     return char + index;
                 },
-                run: function() {
+                run: function () {
                     return params;
                 }
             };
         },
 
-        'named': function(char) {
+        'named': function (char) {
             if (!char || char.length > 1) char = ':';
             var indexes = {};
             var params = {};
             return {
-                add: function(rule, value) {
+                add: function (rule, value) {
                     if (!indexes[rule.field]) indexes[rule.field] = 1;
                     var key = rule.field + '_' + (indexes[rule.field]++);
                     params[key] = value;
                     return char + key;
                 },
-                run: function() {
+                run: function () {
                     return params;
                 }
             };
@@ -185,41 +185,41 @@ QueryBuilder.defaults({
 
     // statements for SQL -> internal conversion
     sqlRuleStatement: {
-        'question_mark': function(values) {
+        'question_mark': function (values) {
             var index = 0;
             return {
-                parse: function(v) {
+                parse: function (v) {
                     return v == '?' ? values[index++] : v;
                 },
-                esc: function(sql) {
+                esc: function (sql) {
                     return sql.replace(/\?/g, '\'?\'');
                 }
             };
         },
 
-        'numbered': function(values, char) {
+        'numbered': function (values, char) {
             if (!char || char.length > 1) char = '$';
             var regex1 = new RegExp('^\\' + char + '[0-9]+$');
             var regex2 = new RegExp('\\' + char + '([0-9]+)', 'g');
             return {
-                parse: function(v) {
+                parse: function (v) {
                     return regex1.test(v) ? values[v.slice(1) - 1] : v;
                 },
-                esc: function(sql) {
+                esc: function (sql) {
                     return sql.replace(regex2, '\'' + (char == '$' ? '$$' : char) + '$1\'');
                 }
             };
         },
 
-        'named': function(values, char) {
+        'named': function (values, char) {
             if (!char || char.length > 1) char = ':';
             var regex1 = new RegExp('^\\' + char);
             var regex2 = new RegExp('\\' + char + '(' + Object.keys(values).join('|') + ')\\b', 'g');
             return {
-                parse: function(v) {
+                parse: function (v) {
                     return regex1.test(v) ? values[v.slice(1)] : v;
                 },
-                esc: function(sql) {
+                esc: function (sql) {
                     return sql.replace(regex2, '\'' + (char == '$' ? '$$' : char) + '$1\'');
                 }
             };
@@ -246,7 +246,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
      * @fires module:plugins.SqlSupport.changer:groupToSQL
      * @throws UndefinedSQLConditionError, UndefinedSQLOperatorError
      */
-    getSQL: function(stmt, nl, data) {
+    getSQL: function (stmt, nl, data) {
         data = (data === undefined) ? this.getRules() : data;
 
         if (!data) {
@@ -280,7 +280,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
 
             var parts = [];
 
-            group.rules.forEach(function(rule) {
+            group.rules.forEach(function (rule) {
                 if (rule.rules && rule.rules.length > 0) {
                     parts.push('(' + nl + parse(rule) + nl + ')' + nl);
                 }
@@ -298,7 +298,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                             rule.value = [rule.value];
                         }
 
-                        rule.value.forEach(function(v, i) {
+                        rule.value.forEach(function (v, i) {
                             if (i > 0) {
                                 value += sql.sep;
                             }
@@ -327,8 +327,8 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                         });
                     }
 
-                    var sqlFn = function(v) {
-                        return sql.op.replace('?', function() {
+                    var sqlFn = function (v) {
+                        return sql.op.replace('?', function () {
                             return v;
                         });
                     };
@@ -396,7 +396,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
      * @fires module:plugins.SqlSupport.changer:sqlToGroup
      * @throws MissingLibraryError, SQLParseError, UndefinedSQLOperatorError
      */
-    getRulesFromSQL: function(query, stmt) {
+    getRulesFromSQL: function (query, stmt) {
         if (!('SQLParser' in window)) {
             Utils.error('MissingLibrary', 'SQLParser is required to parse SQL queries. Get it here https://github.com/mistic100/sql-parser');
         }
@@ -536,7 +536,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                 // convert array
                 var value;
                 if ($.isArray(data.right.value)) {
-                    value = data.right.value.map(function(v) {
+                    value = data.right.value.map(function (v) {
                         return v.value;
                     });
                 }
@@ -583,11 +583,11 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                 var finalValue = opVal.val;
                 var sql = self.settings.sqlOperators[opVal.op];
                 if (!stmt && sql && sql.escape) {
-                    var searchChars = sql.escape.split('').map(function(c) {
+                    var searchChars = sql.escape.split('').map(function (c) {
                         return '\\\\' + c;
                     }).join('|');
                     finalValue = finalValue
-                        .replace(new RegExp('(' + searchChars + ')', 'g'), function(s) {
+                        .replace(new RegExp('(' + searchChars + ')', 'g'), function (s) {
                             return s[1];
                         });
                 }
@@ -620,7 +620,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
      * Sets the builder's rules from a SQL query
      * @see module:plugins.SqlSupport.getRulesFromSQL
      */
-    setRulesFromSQL: function(query, stmt) {
+    setRulesFromSQL: function (query, stmt) {
         this.setRules(this.getRulesFromSQL(query, stmt));
     },
 
@@ -633,8 +633,8 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
      * @returns {string}
      * @private
      */
-    getSQLFieldID: function(field, value) {
-        var matchingFilters = this.filters.filter(function(filter) {
+    getSQLFieldID: function (field, value) {
+        var matchingFilters = this.filters.filter(function (filter) {
             return filter.field.toLowerCase() === field.toLowerCase();
         });
 

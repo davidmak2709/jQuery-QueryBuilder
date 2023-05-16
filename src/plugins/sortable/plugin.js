@@ -5,10 +5,10 @@
  * @param {object} [options]
  * @param {boolean} [options.inherit_no_drop=true]
  * @param {boolean} [options.inherit_no_sortable=true]
- * @param {string} [options.icon='glyphicon glyphicon-sort']
+ * @param {string} [options.icon='fa fa-sort']
  * @throws MissingLibraryError, ConfigError
  */
-QueryBuilder.define('sortable', function(options) {
+QueryBuilder.define('sortable', function (options) {
     if (!('interact' in window)) {
         Utils.error('MissingLibrary', 'interact.js is required to use "sortable" plugin. Get it here: http://interactjs.io');
     }
@@ -30,7 +30,7 @@ QueryBuilder.define('sortable', function(options) {
     var moved;
 
     // Init drag and drop
-    this.on('afterAddRule afterAddGroup', function(e, node) {
+    this.on('afterAddRule afterAddGroup', function (e, node) {
         if (node == placeholder) {
             return;
         }
@@ -50,7 +50,7 @@ QueryBuilder.define('sortable', function(options) {
             interact(node.$el[0])
                 .draggable({
                     allowFrom: QueryBuilder.selectors.drag_handle,
-                    onstart: function(event) {
+                    onstart: function (event) {
                         moved = false;
 
                         // get model of dragged element
@@ -71,12 +71,12 @@ QueryBuilder.define('sortable', function(options) {
                         // hide dragged element
                         src.$el.hide();
                     },
-                    onmove: function(event) {
+                    onmove: function (event) {
                         // make the ghost follow the cursor
                         ghost[0].style.top = event.clientY - 15 + 'px';
                         ghost[0].style.left = event.clientX - 15 + 'px';
                     },
-                    onend: function(event) {
+                    onend: function (event) {
                         // starting from Interact 1.3.3, onend is called before ondrop
                         if (event.dropzone) {
                             moveSortableToTarget(src, $(event.relatedTarget), self);
@@ -112,10 +112,10 @@ QueryBuilder.define('sortable', function(options) {
             interact(node.$el[0])
                 .dropzone({
                     accept: QueryBuilder.selectors.rule_and_group_containers,
-                    ondragenter: function(event) {
+                    ondragenter: function (event) {
                         moveSortableToTarget(placeholder, $(event.target), self);
                     },
-                    ondrop: function(event) {
+                    ondrop: function (event) {
                         if (!moved) {
                             moveSortableToTarget(src, $(event.target), self);
                         }
@@ -127,10 +127,10 @@ QueryBuilder.define('sortable', function(options) {
                 interact(node.$el.find(QueryBuilder.selectors.group_header)[0])
                     .dropzone({
                         accept: QueryBuilder.selectors.rule_and_group_containers,
-                        ondragenter: function(event) {
+                        ondragenter: function (event) {
                             moveSortableToTarget(placeholder, $(event.target), self);
                         },
-                        ondrop: function(event) {
+                        ondrop: function (event) {
                             if (!moved) {
                                 moveSortableToTarget(src, $(event.target), self);
                             }
@@ -141,7 +141,7 @@ QueryBuilder.define('sortable', function(options) {
     });
 
     // Detach interactables
-    this.on('beforeDeleteRule beforeDeleteGroup', function(e, node) {
+    this.on('beforeDeleteRule beforeDeleteGroup', function (e, node) {
         if (!e.isDefaultPrevented()) {
             interact(node.$el[0]).unset();
 
@@ -152,7 +152,7 @@ QueryBuilder.define('sortable', function(options) {
     });
 
     // Remove drag handle from non-sortable items
-    this.on('afterApplyRuleFlags afterApplyGroupFlags', function(e, node) {
+    this.on('afterApplyRuleFlags afterApplyGroupFlags', function (e, node) {
         if (node.flags.no_sortable) {
             node.$el.find('.drag-handle').remove();
         }
@@ -160,24 +160,38 @@ QueryBuilder.define('sortable', function(options) {
 
     // Modify templates
     if (!options.disable_template) {
-        this.on('getGroupTemplate.filter', function(h, level) {
+        this.on('getGroupTemplate.filter', function (h, level) {
             if (level > 1) {
                 var $h = $($.parseHTML(h.value));
-                $h.find(QueryBuilder.selectors.condition_container).after('<div class="drag-handle"><i class="' + options.icon + '"></i></div>');
+                $h.find(QueryBuilder.selectors.condition_container)
+                    .after(`
+                    <div class="drag-handle">
+                        <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--noLabel t-Button--icon">
+                            <span aria-hidden="true" class="t-Icon ${options.icon}"></span>
+                        </button>
+                    </div>
+                    `);
                 h.value = $h.prop('outerHTML');
             }
         });
 
-        this.on('getRuleTemplate.filter', function(h) {
+        this.on('getRuleTemplate.filter', function (h) {
             var $h = $($.parseHTML(h.value));
-            $h.find(QueryBuilder.selectors.rule_header).after('<div class="drag-handle"><i class="' + options.icon + '"></i></div>');
+            $h.find(QueryBuilder.selectors.rule_header)
+                .after(`
+                <div class="drag-handle">
+                    <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--noLabel t-Button--icon">
+                        <span aria-hidden="true" class="t-Icon ${options.icon}"></span>
+                    </button>
+                </div>
+                `);
             h.value = $h.prop('outerHTML');
         });
     }
 }, {
     inherit_no_sortable: true,
     inherit_no_drop: true,
-    icon: 'glyphicon glyphicon-sort',
+    icon: 'fa fa-sort',
     disable_template: false
 });
 

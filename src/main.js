@@ -15,7 +15,7 @@
  * @param {object} options - see {@link http://querybuilder.js.org/#options}
  * @constructor
  */
-var QueryBuilder = function($el, options) {
+var QueryBuilder = function ($el, options) {
     $el[0].queryBuilder = this;
 
     /**
@@ -117,7 +117,7 @@ var QueryBuilder = function($el, options) {
     }
 
     // init templates
-    Object.keys(this.templates).forEach(function(tpl) {
+    Object.keys(this.templates).forEach(function (tpl) {
         if (!this.templates[tpl]) {
             this.templates[tpl] = QueryBuilder.templates[tpl];
         }
@@ -148,7 +148,7 @@ $.extend(QueryBuilder.prototype, /** @lends QueryBuilder.prototype */ {
      * @param {string} type
      * @returns {$.Event}
      */
-    trigger: function(type) {
+    trigger: function (type) {
         var event = new $.Event(this._tojQueryEvent(type), {
             builder: this
         });
@@ -164,7 +164,7 @@ $.extend(QueryBuilder.prototype, /** @lends QueryBuilder.prototype */ {
      * @param {*} value
      * @returns {*}
      */
-    change: function(type, value) {
+    change: function (type, value) {
         var event = new $.Event(this._tojQueryEvent(type, true), {
             builder: this,
             value: value
@@ -181,7 +181,7 @@ $.extend(QueryBuilder.prototype, /** @lends QueryBuilder.prototype */ {
      * @param {function} cb
      * @returns {QueryBuilder}
      */
-    on: function(type, cb) {
+    on: function (type, cb) {
         this.$el.on(this._tojQueryEvent(type), cb);
         return this;
     },
@@ -192,7 +192,7 @@ $.extend(QueryBuilder.prototype, /** @lends QueryBuilder.prototype */ {
      * @param {function} [cb]
      * @returns {QueryBuilder}
      */
-    off: function(type, cb) {
+    off: function (type, cb) {
         this.$el.off(this._tojQueryEvent(type), cb);
         return this;
     },
@@ -203,7 +203,7 @@ $.extend(QueryBuilder.prototype, /** @lends QueryBuilder.prototype */ {
      * @param {function} cb
      * @returns {QueryBuilder}
      */
-    once: function(type, cb) {
+    once: function (type, cb) {
         this.$el.one(this._tojQueryEvent(type), cb);
         return this;
     },
@@ -215,8 +215,8 @@ $.extend(QueryBuilder.prototype, /** @lends QueryBuilder.prototype */ {
      * @returns {string}
      * @private
      */
-    _tojQueryEvent: function(name, filter) {
-        return name.split(' ').map(function(type) {
+    _tojQueryEvent: function (name, filter) {
+        return name.split(' ').map(function (type) {
             return type + '.queryBuilder' + (filter ? '.filter' : '');
         }).join(' ');
     }

@@ -3,7 +3,7 @@
  * @memberof module:plugins
  * @description Allows to invert a rule operator, a group condition or the entire builder.
  * @param {object} [options]
- * @param {string} [options.icon='glyphicon glyphicon-random']
+ * @param {string} [options.icon='fa fa-random]
  * @param {boolean} [options.recursive=true]
  * @param {boolean} [options.invert_rules=true]
  * @param {boolean} [options.display_rules_button=false]
@@ -33,9 +33,12 @@ QueryBuilder.define('invert', function(options) {
         this.on('getGroupTemplate.filter', function(h) {
             var $h = $($.parseHTML(h.value));
             $h.find(Selectors.condition_container).after(
-                '<button type="button" class="btn btn-xs btn-default" data-invert="group">' +
-                '<i class="' + options.icon + '"></i> ' + self.translate('invert') +
-                '</button>'
+                `
+                <button type="button" class="t-Button t-Button--icon t-Button--iconLeft" data-invert="group">
+                    <span aria-hidden="true" class="t-Icon t-Icon--left ${options.icon}"></span>
+                    ${self.translate('invert')}
+                </button>
+                `
             );
             h.value = $h.prop('outerHTML');
         });
@@ -44,16 +47,19 @@ QueryBuilder.define('invert', function(options) {
             this.on('getRuleTemplate.filter', function(h) {
                 var $h = $($.parseHTML(h.value));
                 $h.find(Selectors.rule_actions).prepend(
-                    '<button type="button" class="btn btn-xs btn-default" data-invert="rule">' +
-                    '<i class="' + options.icon + '"></i> ' + self.translate('invert') +
-                    '</button>'
+                    `
+                    <button type="button" class="t-Button t-Button--icon t-Button--iconLeft" data-invert="rule">
+                        <span aria-hidden="true" class="t-Icon t-Icon--left ${options.icon}"></span>
+                        ${self.translate('invert')}
+                    </button>
+                    `
                 );
                 h.value = $h.prop('outerHTML');
             });
         }
     }
 }, {
-    icon: 'glyphicon glyphicon-random',
+    icon: 'fa fa-random',
     recursive: true,
     invert_rules: true,
     display_rules_button: false,

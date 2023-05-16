@@ -5,7 +5,7 @@
  * @returns {array|boolean} true or error array
  * @fires QueryBuilder.changer:validateValue
  */
-QueryBuilder.prototype.validateValue = function(rule, value) {
+QueryBuilder.prototype.validateValue = function (rule, value) {
     var validation = rule.filter.validation || {};
     var result = true;
 
@@ -36,7 +36,7 @@ QueryBuilder.prototype.validateValue = function(rule, value) {
  * @throws ConfigError
  * @private
  */
-QueryBuilder.prototype._validateValue = function(rule, value) {
+QueryBuilder.prototype._validateValue = function (rule, value) {
     var filter = rule.filter;
     var operator = rule.operator;
     var validation = filter.validation || {};
@@ -48,7 +48,7 @@ QueryBuilder.prototype._validateValue = function(rule, value) {
     }
 
     for (var i = 0; i < operator.nb_inputs; i++) {
-        if (!operator.multiple && $.isArray(value[i]) && value[i].length > 1) {
+        if (!operator.multiple && Array.isArray(value[i]) && value[i].length > 1) {
             result = ['operator_not_multiple', operator.type, this.translate('operators', operator.type)];
             break;
         }
@@ -82,7 +82,7 @@ QueryBuilder.prototype._validateValue = function(rule, value) {
                 break;
 
             default:
-                tempValue = $.isArray(value[i]) ? value[i] : [value[i]];
+                tempValue = Array.isArray(value[i]) ? value[i] : [value[i]];
 
                 for (var j = 0; j < tempValue.length; j++) {
                     switch (QueryBuilder.types[filter.type]) {
@@ -252,7 +252,7 @@ QueryBuilder.prototype._validateValue = function(rule, value) {
  * @returns {string}
  * @private
  */
-QueryBuilder.prototype.nextGroupId = function() {
+QueryBuilder.prototype.nextGroupId = function () {
     return this.status.id + '_group_' + (this.status.group_id++);
 };
 
@@ -261,7 +261,7 @@ QueryBuilder.prototype.nextGroupId = function() {
  * @returns {string}
  * @private
  */
-QueryBuilder.prototype.nextRuleId = function() {
+QueryBuilder.prototype.nextRuleId = function () {
     return this.status.id + '_rule_' + (this.status.rule_id++);
 };
 
@@ -271,7 +271,7 @@ QueryBuilder.prototype.nextRuleId = function() {
  * @returns {object[]}
  * @fires QueryBuilder.changer:getOperators
  */
-QueryBuilder.prototype.getOperators = function(filter) {
+QueryBuilder.prototype.getOperators = function (filter) {
     if (typeof filter == 'string') {
         filter = this.getFilterById(filter);
     }
@@ -295,7 +295,7 @@ QueryBuilder.prototype.getOperators = function(filter) {
 
     // keep sort order defined for the filter
     if (filter.operators) {
-        result.sort(function(a, b) {
+        result.sort(function (a, b) {
             return filter.operators.indexOf(a.type) - filter.operators.indexOf(b.type);
         });
     }
@@ -318,7 +318,7 @@ QueryBuilder.prototype.getOperators = function(filter) {
  * @returns {object|null}
  * @throws UndefinedFilterError
  */
-QueryBuilder.prototype.getFilterById = function(id, doThrow) {
+QueryBuilder.prototype.getFilterById = function (id, doThrow) {
     if (id == '-1') {
         return null;
     }
@@ -341,7 +341,7 @@ QueryBuilder.prototype.getFilterById = function(id, doThrow) {
  * @returns {object|null}
  * @throws UndefinedOperatorError
  */
-QueryBuilder.prototype.getOperatorByType = function(type, doThrow) {
+QueryBuilder.prototype.getOperatorByType = function (type, doThrow) {
     if (type == '-1') {
         return null;
     }
@@ -364,7 +364,7 @@ QueryBuilder.prototype.getOperatorByType = function(type, doThrow) {
  * @fires QueryBuilder.changer:getRuleValue
  * @private
  */
-QueryBuilder.prototype.getRuleInputValue = function(rule) {
+QueryBuilder.prototype.getRuleInputValue = function (rule) {
     var filter = rule.filter;
     var operator = rule.operator;
     var value = [];
@@ -387,7 +387,7 @@ QueryBuilder.prototype.getRuleInputValue = function(rule) {
                 case 'checkbox':
                     tmp = [];
                     // jshint loopfunc:true
-                    $value.find('[name=' + name + ']:checked').each(function() {
+                    $value.find('[name=' + name + ']:checked').each(function () {
                         tmp.push($(this).val());
                     });
                     // jshint loopfunc:false
@@ -398,7 +398,7 @@ QueryBuilder.prototype.getRuleInputValue = function(rule) {
                     if (filter.multiple) {
                         tmp = [];
                         // jshint loopfunc:true
-                        $value.find('[name=' + name + '] option:selected').each(function() {
+                        $value.find('[name=' + name + '] option:selected').each(function () {
                             tmp.push($(this).val());
                         });
                         // jshint loopfunc:false
@@ -414,13 +414,13 @@ QueryBuilder.prototype.getRuleInputValue = function(rule) {
             }
         }
 
-        value = value.map(function(val) {
+        value = value.map(function (val) {
             if (operator.multiple && filter.value_separator && typeof val == 'string') {
                 val = val.split(filter.value_separator);
             }
 
-            if ($.isArray(val)) {
-                return val.map(function(subval) {
+            if (Array.isArray(val)) {
+                return val.map(function (subval) {
                     return Utils.changeType(subval, filter.type);
                 });
             }
@@ -456,7 +456,7 @@ QueryBuilder.prototype.getRuleInputValue = function(rule) {
  * @param {*} value
  * @private
  */
-QueryBuilder.prototype.setRuleInputValue = function(rule, value) {
+QueryBuilder.prototype.setRuleInputValue = function (rule, value) {
     var filter = rule.filter;
     var operator = rule.operator;
 
@@ -485,18 +485,18 @@ QueryBuilder.prototype.setRuleInputValue = function(rule, value) {
                     break;
 
                 case 'checkbox':
-                    if (!$.isArray(value[i])) {
+                    if (!Array.isArray(value[i])) {
                         value[i] = [value[i]];
                     }
                     // jshint loopfunc:true
-                    value[i].forEach(function(value) {
+                    value[i].forEach(function (value) {
                         $value.find('[name=' + name + '][value="' + value + '"]').prop('checked', true).trigger('change');
                     });
                     // jshint loopfunc:false
                     break;
 
                 default:
-                    if (operator.multiple && filter.value_separator && $.isArray(value[i])) {
+                    if (operator.multiple && filter.value_separator && Array.isArray(value[i])) {
                         value[i] = value[i].join(filter.value_separator);
                     }
                     $value.find('[name=' + name + ']').val(value[i]).trigger('change');
@@ -515,7 +515,7 @@ QueryBuilder.prototype.setRuleInputValue = function(rule, value) {
  * @fires QueryBuilder.changer:parseRuleFlags
  * @private
  */
-QueryBuilder.prototype.parseRuleFlags = function(rule) {
+QueryBuilder.prototype.parseRuleFlags = function (rule) {
     var flags = $.extend({}, this.settings.default_rule_flags);
 
     if (rule.readonly) {
@@ -549,13 +549,13 @@ QueryBuilder.prototype.parseRuleFlags = function(rule) {
  * @returns {object}
  * @private
  */
-QueryBuilder.prototype.getRuleFlags = function(flags, all) {
+QueryBuilder.prototype.getRuleFlags = function (flags, all) {
     if (all) {
         return $.extend({}, flags);
     }
     else {
         var ret = {};
-        $.each(this.settings.default_rule_flags, function(key, value) {
+        $.each(this.settings.default_rule_flags, function (key, value) {
             if (flags[key] !== value) {
                 ret[key] = flags[key];
             }
@@ -571,7 +571,7 @@ QueryBuilder.prototype.getRuleFlags = function(flags, all) {
  * @fires QueryBuilder.changer:parseGroupFlags
  * @private
  */
-QueryBuilder.prototype.parseGroupFlags = function(group) {
+QueryBuilder.prototype.parseGroupFlags = function (group) {
     var flags = $.extend({}, this.settings.default_group_flags);
 
     if (group.readonly) {
@@ -605,13 +605,13 @@ QueryBuilder.prototype.parseGroupFlags = function(group) {
  * @returns {object}
  * @private
  */
-QueryBuilder.prototype.getGroupFlags = function(flags, all) {
+QueryBuilder.prototype.getGroupFlags = function (flags, all) {
     if (all) {
         return $.extend({}, flags);
     }
     else {
         var ret = {};
-        $.each(this.settings.default_group_flags, function(key, value) {
+        $.each(this.settings.default_group_flags, function (key, value) {
             if (flags[key] !== value) {
                 ret[key] = flags[key];
             }
@@ -627,7 +627,7 @@ QueryBuilder.prototype.getGroupFlags = function(flags, all) {
  * @returns {string}
  * @fires QueryBuilder.changer:translate
  */
-QueryBuilder.prototype.translate = function(category, key) {
+QueryBuilder.prototype.translate = function (category, key) {
     if (!key) {
         key = category;
         category = undefined;
@@ -661,6 +661,6 @@ QueryBuilder.prototype.translate = function(category, key) {
  * @returns {string}
  * @private
  */
-QueryBuilder.prototype.getValidationMessage = function(validation, type, def) {
+QueryBuilder.prototype.getValidationMessage = function (validation, type, def) {
     return validation.messages && validation.messages[type] || def;
 };

@@ -13,7 +13,7 @@ QueryBuilder.plugins = {};
  * @param {object} [options] - new configuration
  * @returns {undefined|object} nothing or configuration object (copy)
  */
-QueryBuilder.defaults = function(options) {
+QueryBuilder.defaults = function (options) {
     if (typeof options == 'object') {
         $.extendext(true, 'replace', QueryBuilder.DEFAULTS, options);
     }
@@ -36,7 +36,7 @@ QueryBuilder.defaults = function(options) {
  * @param {function} fct - init function
  * @param {object} [def] - default options
  */
-QueryBuilder.define = function(name, fct, def) {
+QueryBuilder.define = function (name, fct, def) {
     QueryBuilder.plugins[name] = {
         fct: fct,
         def: def || {}
@@ -47,7 +47,7 @@ QueryBuilder.define = function(name, fct, def) {
  * Adds new methods to QueryBuilder prototype
  * @param {object.<string, function>} methods
  */
-QueryBuilder.extend = function(methods) {
+QueryBuilder.extend = function (methods) {
     $.extend(QueryBuilder.prototype, methods);
 };
 
@@ -56,20 +56,20 @@ QueryBuilder.extend = function(methods) {
  * @throws ConfigError
  * @private
  */
-QueryBuilder.prototype.initPlugins = function() {
+QueryBuilder.prototype.initPlugins = function () {
     if (!this.plugins) {
         return;
     }
 
-    if ($.isArray(this.plugins)) {
+    if (Array.isArray(this.plugins)) {
         var tmp = {};
-        this.plugins.forEach(function(plugin) {
+        this.plugins.forEach(function (plugin) {
             tmp[plugin] = null;
         });
         this.plugins = tmp;
     }
 
-    Object.keys(this.plugins).forEach(function(plugin) {
+    Object.keys(this.plugins).forEach(function (plugin) {
         if (plugin in QueryBuilder.plugins) {
             this.plugins[plugin] = $.extend(true, {},
                 QueryBuilder.plugins[plugin].def,
@@ -91,7 +91,7 @@ QueryBuilder.prototype.initPlugins = function() {
  * @throws ConfigError
  * @returns {*}
  */
-QueryBuilder.prototype.getPluginOptions = function(name, property) {
+QueryBuilder.prototype.getPluginOptions = function (name, property) {
     var plugin;
     if (this.plugins && this.plugins[name]) {
         plugin = this.plugins[name];

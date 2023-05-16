@@ -36,10 +36,10 @@ QueryBuilder.utils = Utils;
  * @param {object|array} options
  * @param {Utils#OptionsIteratee} tpl
  */
-Utils.iterateOptions = function(options, tpl) {
+Utils.iterateOptions = function (options, tpl) {
     if (options) {
-        if ($.isArray(options)) {
-            options.forEach(function(entry) {
+        if (Array.isArray(options)) {
+            options.forEach(function (entry) {
                 if ($.isPlainObject(entry)) {
                     // array of elements
                     if ('value' in entry) {
@@ -47,7 +47,7 @@ Utils.iterateOptions = function(options, tpl) {
                     }
                     // array of one-element maps
                     else {
-                        $.each(entry, function(key, val) {
+                        $.each(entry, function (key, val) {
                             tpl(key, val);
                             return false; // break after first entry
                         });
@@ -61,7 +61,7 @@ Utils.iterateOptions = function(options, tpl) {
         }
         // unordered map
         else {
-            $.each(options, function(key, val) {
+            $.each(options, function (key, val) {
                 tpl(key, val);
             });
         }
@@ -74,12 +74,12 @@ Utils.iterateOptions = function(options, tpl) {
  * @param {...*} args
  * @returns {string}
  */
-Utils.fmt = function(str, args) {
+Utils.fmt = function (str, args) {
     if (!Array.isArray(args)) {
         args = Array.prototype.slice.call(arguments, 1);
     }
 
-    return str.replace(/{([0-9]+)}/g, function(m, i) {
+    return str.replace(/{([0-9]+)}/g, function (m, i) {
         return args[parseInt(i)];
     });
 };
@@ -91,7 +91,7 @@ Utils.fmt = function(str, args) {
  * @param {string} message
  * @param {...*} args
  */
-Utils.error = function() {
+Utils.error = function () {
     var i = 0;
     var doThrow = typeof arguments[i] === 'boolean' ? arguments[i++] : true;
     var type = arguments[i++];
@@ -115,7 +115,7 @@ Utils.error = function() {
  * @param {string} type - 'integer', 'double', 'boolean' or anything else (passthrough)
  * @returns {*}
  */
-Utils.changeType = function(value, type) {
+Utils.changeType = function (value, type) {
     if (value === '' || value === undefined) {
         return undefined;
     }
@@ -148,13 +148,13 @@ Utils.changeType = function(value, type) {
  * @param {string} [additionalEscape] additionnal chars to escape
  * @returns {string}
  */
-Utils.escapeString = function(value, additionalEscape) {
+Utils.escapeString = function (value, additionalEscape) {
     if (typeof value != 'string') {
         return value;
     }
 
     var escaped = value
-        .replace(/[\0\n\r\b\\\'\"]/g, function(s) {
+        .replace(/[\0\n\r\b\\\'\"]/g, function (s) {
             switch (s) {
                 // @formatter:off
                 case '\0': return '\\0';
@@ -162,7 +162,7 @@ Utils.escapeString = function(value, additionalEscape) {
                 case '\r': return '\\r';
                 case '\b': return '\\b';
                 case '\'': return '\'\'';
-                default:   return '\\' + s;
+                default: return '\\' + s;
                 // @formatter:off
             }
         })
@@ -172,7 +172,7 @@ Utils.escapeString = function(value, additionalEscape) {
 
     if (additionalEscape) {
         escaped = escaped
-            .replace(new RegExp('[' + additionalEscape + ']', 'g'), function(s) {
+            .replace(new RegExp('[' + additionalEscape + ']', 'g'), function (s) {
                 return '\\' + s;
             });
     }
@@ -185,7 +185,7 @@ Utils.escapeString = function(value, additionalEscape) {
  * @param {string} str
  * @returns {string}
  */
-Utils.escapeRegExp = function(str) {
+Utils.escapeRegExp = function (str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 };
 
@@ -194,13 +194,13 @@ Utils.escapeRegExp = function(str) {
  * @param {string} str
  * @returns {string}
  */
-Utils.escapeElementId = function(str) {
+Utils.escapeElementId = function (str) {
     // Regex based on that suggested by:
     // https://learn.jquery.com/using-jquery-core/faq/how-do-i-select-an-element-by-an-id-that-has-characters-used-in-css-notation/
     // - escapes : . [ ] ,
     // - avoids escaping already escaped values
     return (str) ? str.replace(/(\\)?([:.\[\],])/g,
-            function( $0, $1, $2 ) { return $1 ? $0 : '\\' + $2; }) : str;
+        function ($0, $1, $2) { return $1 ? $0 : '\\' + $2; }) : str;
 };
 
 /**
@@ -209,11 +209,11 @@ Utils.escapeElementId = function(str) {
  * @param {string} key
  * @returns {object[]}
  */
-Utils.groupSort = function(items, key) {
+Utils.groupSort = function (items, key) {
     var optgroups = [];
     var newItems = [];
 
-    items.forEach(function(item) {
+    items.forEach(function (item) {
         var idx;
 
         if (item[key]) {
@@ -244,14 +244,14 @@ Utils.groupSort = function(items, key) {
  * @param {function} obj
  * @param {string[]} fields
  */
-Utils.defineModelProperties = function(obj, fields) {
-    fields.forEach(function(field) {
+Utils.defineModelProperties = function (obj, fields) {
+    fields.forEach(function (field) {
         Object.defineProperty(obj.prototype, field, {
             enumerable: true,
-            get: function() {
+            get: function () {
                 return this.__[field];
             },
-            set: function(value) {
+            set: function (value) {
                 var previousValue = (this.__[field] !== null && typeof this.__[field] == 'object') ?
                     $.extend({}, this.__[field]) :
                     this.__[field];

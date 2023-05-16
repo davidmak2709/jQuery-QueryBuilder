@@ -13,7 +13,7 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
      * @fires module:plugins.ChangeFilters.afterSetFilters
      * @throws ChangeFilterError
      */
-    setFilters: function(deleteOrphans, filters) {
+    setFilters: function (deleteOrphans, filters) {
         var self = this;
 
         if (filters === undefined) {
@@ -32,7 +32,7 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
          */
         filters = this.change('setFilters', filters);
 
-        var filtersIds = filters.map(function(filter) {
+        var filtersIds = filters.map(function (filter) {
             return filter.id;
         });
 
@@ -40,7 +40,7 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
         if (!deleteOrphans) {
             (function checkOrphans(node) {
                 node.each(
-                    function(rule) {
+                    function (rule) {
                         if (rule.filter && filtersIds.indexOf(rule.filter.id) === -1) {
                             Utils.error('ChangeFilter', 'A rule is using filter "{0}"', rule.filter.id);
                         }
@@ -56,7 +56,7 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
         // apply on existing DOM
         (function updateBuilder(node) {
             node.each(true,
-                function(rule) {
+                function (rule) {
                     if (rule.filter && filtersIds.indexOf(rule.filter.id) === -1) {
                         rule.drop();
 
@@ -110,7 +110,7 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
      * @fires module:plugins.ChangeFilters.afterSetFilters
      * @throws ChangeFilterError
      */
-    addFilter: function(newFilters, position) {
+    addFilter: function (newFilters, position) {
         if (position === undefined || position == '#end') {
             position = this.filters.length;
         }
@@ -130,12 +130,12 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
         }
         else {
             // after filter by its id
-            if (this.filters.some(function(filter, index) {
-                    if (filter.id == position) {
-                        position = index + 1;
-                        return true;
-                    }
-                })
+            if (this.filters.some(function (filter, index) {
+                if (filter.id == position) {
+                    position = index + 1;
+                    return true;
+                }
+            })
             ) {
                 Array.prototype.splice.apply(filters, [position, 0].concat(newFilters));
             }
@@ -156,13 +156,13 @@ QueryBuilder.extend(/** @lends module:plugins.ChangeFilters.prototype */ {
      * @fires module:plugins.ChangeFilters.afterSetFilters
      * @throws ChangeFilterError
      */
-    removeFilter: function(filterIds, deleteOrphans) {
+    removeFilter: function (filterIds, deleteOrphans) {
         var filters = $.extend(true, [], this.filters);
         if (typeof filterIds === 'string') {
             filterIds = [filterIds];
         }
 
-        filters = filters.filter(function(filter) {
+        filters = filters.filter(function (filter) {
             return filterIds.indexOf(filter.id) === -1;
         });
 
