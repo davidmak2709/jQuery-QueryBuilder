@@ -33,7 +33,9 @@ QueryBuilder.defaults({
         is_empty: { op: '= \'\'' },
         is_not_empty: { op: '!= \'\'' },
         is_null: { op: 'IS NULL' },
-        is_not_null: { op: 'IS NOT NULL' }
+        is_not_null: { op: 'IS NOT NULL' },
+        //
+        hidden: { op: '= \'#HIDDEN#\''}
     },
 
     // operators for SQL -> internal conversion

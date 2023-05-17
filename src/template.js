@@ -136,23 +136,35 @@ QueryBuilder.templates.operatorSelect = `
 {{?}}
 `;
 
-QueryBuilder.templates.ruleValueSelect = '\
-{{ var optgroup = null; }} \
-<select class="form-control" name="{{= it.name }}" {{? it.rule.filter.multiple }}multiple{{?}}> \
-  {{? it.rule.filter.placeholder }} \
-    <option value="{{= it.rule.filter.placeholder_value }}" disabled selected>{{= it.rule.filter.placeholder }}</option> \
-  {{?}} \
-  {{~ it.rule.filter.values: entry }} \
-    {{? optgroup !== entry.optgroup }} \
-      {{? optgroup !== null }}</optgroup>{{?}} \
-      {{? (optgroup = entry.optgroup) !== null }} \
-        <optgroup label="{{= it.translate(it.settings.optgroups[optgroup]) }}"> \
-      {{?}} \
-    {{?}} \
-    <option value="{{= entry.value }}">{{= entry.label }}</option> \
-  {{~}} \
-  {{? optgroup !== null }}</optgroup>{{?}} \
-</select>';
+QueryBuilder.templates.ruleValueSelect = `
+<div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
+    <div class="t-Form-labelContainer"> 
+        <label for="{{= it.rule.id }}_operator" id="{{= it.rule.id }}_value_LABEL" class="t-Form-label">
+            {{= it.translate("value") }}
+        </label> 
+    </div> 
+    <div class="t-Form-inputContainer"> 
+        <div class="t-Form-itemWrapper"> 
+            {{ var optgroup = null; }} 
+            <select class="form-control apex-item-select style="text-indent: 0px;" id="{{= it.rule.id }}_value" name="{{= it.rule.id }}_value" {{? it.rule.filter.multiple }}multiple{{?}}> 
+              {{? it.rule.filter.placeholder }}
+                <option value="{{= it.rule.filter.placeholder_value }}" disabled selected>{{= it.rule.filter.placeholder }}</option> \
+              {{?}}     
+              {{~ it.rule.filter.values: entry }} 
+                  {{? optgroup !== entry.optgroup }} 
+                      {{? optgroup !== null }}</optgroup>{{?}} 
+                      {{? (optgroup = entry.optgroup) !== null }} 
+                          <optgroup label="{{= it.translate(it.settings.optgroups[optgroup]) }}"> 
+                      {{?}} 
+                  {{?}} 
+                  <option value="{{= entry.value }}">{{= entry.label }}</option> 
+              {{~}} 
+              {{? optgroup !== null }}</optgroup>{{?}} 
+            </select> 
+        </div> 
+    </div> 
+</div> 
+`;
 
 /**
  * Returns group's HTML
@@ -197,7 +209,8 @@ QueryBuilder.prototype.getRuleTemplate = function (rule_id) {
     rule_id: rule_id,
     icons: this.icons,
     settings: this.settings,
-    translate: this.translate.bind(this)
+    translate: this.translate.bind(this),
+    expandFilterSelector: this.filters.every( v => v.type === 'hidden' && v.input === 'hidden')
   });
 
   /**
@@ -327,7 +340,7 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
         h += `<div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--${filter.input === 'checkbox' ? 'checkbox' : 'radiogroup'}"`;
         h += `
           <div class="t-Form-labelContainer">
-            <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('Value')}</label>
+            <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('value')}</label>
           </div>
           <div class="t-Form-inputContainer">
             <div class="t-Form-itemWrapper">
@@ -362,7 +375,7 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
         h += `
           <div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--textarea js-show-label" id="${name}_CONTAINER">
             <div class="t-Form-labelContainer">
-              <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('Value')}</label>
+              <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('value')}</label>
             </div>
             <div class="t-Form-inputContainer">
               <div class="t-Form-itemWrapper">
@@ -390,7 +403,7 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
         h += `
           <div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--number-field js-show-label"> 
               <div class="t-Form-labelContainer"> 
-                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('Value')}</label> 
+                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('value')}</label> 
               </div> 
               <div class="t-Form-inputContainer"> 
                   <div class="t-Form-itemWrapper"> 
@@ -410,6 +423,10 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
           </div>
         `;
         break;
+        
+      case 'hidden':
+          break;    
+
       default:
         h += `
           <div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--text-field js-show-label"> 

@@ -11,7 +11,8 @@ QueryBuilder.types = {
     'date':     'datetime',
     'time':     'datetime',
     'datetime': 'datetime',
-    'boolean':  'boolean'
+    'boolean':  'boolean',
+    'hidden': 'hidden'
 };
 
 /**
@@ -26,7 +27,8 @@ QueryBuilder.inputs = [
     'textarea',
     'radio',
     'checkbox',
-    'select'
+    'select',
+    'hidden'
 ];
 
 /**
@@ -114,7 +116,8 @@ QueryBuilder.OPERATORS = {
     is_empty:         { type: 'is_empty',         nb_inputs: 0, multiple: false, apply_to: ['string'] },
     is_not_empty:     { type: 'is_not_empty',     nb_inputs: 0, multiple: false, apply_to: ['string'] },
     is_null:          { type: 'is_null',          nb_inputs: 0, multiple: false, apply_to: ['string', 'number', 'datetime', 'boolean'] },
-    is_not_null:      { type: 'is_not_null',      nb_inputs: 0, multiple: false, apply_to: ['string', 'number', 'datetime', 'boolean'] }
+    is_not_null:      { type: 'is_not_null',      nb_inputs: 0, multiple: false, apply_to: ['string', 'number', 'datetime', 'boolean'] },
+    hidden:           { type: 'hidden',           nb_inputs: 0, multiple: false, apply_to: ['hidden'] }
 };
 
 /**
@@ -183,7 +186,8 @@ QueryBuilder.DEFAULTS = {
         'is_empty',
         'is_not_empty',
         'is_null',
-        'is_not_null'
+        'is_not_null',
+        'hidden'
     ],
 
     icons: {
