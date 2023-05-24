@@ -195,6 +195,6 @@ QueryBuilder.DEFAULTS = {
         add_rule: 'fa fa-plus',
         remove_group: 'fa fa-trash-o',
         remove_rule: 'fa fa-trash-o',
-        error: 'fa fa-exclamation-triangle fa-lg'
+        error: 'fa fa-exclamation-triangle'
     }
 };
