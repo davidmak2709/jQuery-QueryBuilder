@@ -64,5 +64,7 @@
   "NOT": "NE",
   "value": "Value",
   "filter": "Filter",
-  "operator": "Operator"
+  "operator": "Operator",
+  "from": "From",
+  "to": "To"
 }

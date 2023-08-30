@@ -64,6 +64,8 @@
     "NOT": "NE",
     "value": "Vrijednost",
     "filter": "Filter",
-    "operator": "Operator"
+    "operator": "Operator",
+    "from": "Od",
+    "to": "Do"
   }
   

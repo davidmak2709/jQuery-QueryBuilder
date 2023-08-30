@@ -1,4 +1,4 @@
-QueryBuilder.templates.group = `
+QueryBuilder.templates.group =`
 <div id="{{= it.group_id }}" class="rules-group-container"> 
     <div class="rules-group-header"> 
         <div class="u-pullRight group-actions"> 
@@ -74,7 +74,7 @@ QueryBuilder.templates.rule = `
 
 QueryBuilder.templates.filterSelect = `
 {{ var optgroup = null; }} 
-<div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--select-list js-show-label">
+<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--select-list js-show-label">
      <div class="t-Form-labelContainer">
          <label for="{{= it.rule.id }}_filter" id="{{= it.rule.id }}_filter_LABEL" class="t-Form-label">
             {{= it.translate("filter") }}
@@ -104,7 +104,7 @@ QueryBuilder.templates.filterSelect = `
 
 QueryBuilder.templates.operatorSelect = `
 {{? it.operators[0].type !== 'hidden' }}
-<div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
+<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
     <div class="t-Form-labelContainer"> 
         <label for="{{= it.rule.id }}_operator" id="{{= it.rule.id }}_operator_LABEL" class="t-Form-label">
             {{= it.translate("operator") }}
@@ -137,7 +137,7 @@ QueryBuilder.templates.operatorSelect = `
 `;
 
 QueryBuilder.templates.ruleValueSelect = `
-<div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
+<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
     <div class="t-Form-labelContainer"> 
         <label for="{{= it.rule.id }}_value" id="{{= it.rule.id }}_value_LABEL" class="t-Form-label">
             {{= it.translate("value") }}
@@ -321,14 +321,21 @@ QueryBuilder.prototype.getRuleValueSelect = function (name, rule) {
  * @fires QueryBuilder.changer:getRuleInput
  * @private
  */
-QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
+QueryBuilder.prototype.getRuleInput = function (rule, value_id, nb_inputs) {
   var filter = rule.filter;
   var validation = rule.filter.validation || {};
   var name = rule.id + '_value_' + value_id;
-  var c = filter.vertical ? ' class=block' : '';
+  var c = filter.vertical ? '' : 'style="flex: 1;"';
   var h = '';
   var placeholder = Array.isArray(filter.placeholder) ? filter.placeholder[value_id] : filter.placeholder;
   var translate = this.translate.bind(this);
+
+  var label = translate('value');
+  if(nb_inputs === 2 && value_id === 0) {
+    label = translate('from');
+  } else if(nb_inputs === 2 && value_id === 1) {
+    label = translate('to');
+  }
 
   if (typeof filter.input == 'function') {
     h = filter.input.call(this, rule, name);
@@ -337,10 +344,10 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
     switch (filter.input) {
       case 'radio':
       case 'checkbox':
-        h += `<div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--${filter.input === 'checkbox' ? 'checkbox' : 'radiogroup'}"`;
+        h += `<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--${filter.input === 'checkbox' ? 'checkbox' : 'radiogroup'}" ${c}>`;
         h += `
           <div class="t-Form-labelContainer">
-            <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('value')}</label>
+            <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label>
           </div>
           <div class="t-Form-inputContainer">
             <div class="t-Form-itemWrapper">
@@ -373,9 +380,9 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
 
       case 'textarea':
         h += `
-          <div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--textarea js-show-label" id="${name}_CONTAINER">
+          <div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--textarea js-show-label" id="${name}_CONTAINER" ${c}>
             <div class="t-Form-labelContainer">
-              <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('value')}</label>
+              <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label>
             </div>
             <div class="t-Form-inputContainer">
               <div class="t-Form-itemWrapper">
@@ -400,9 +407,9 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
         break;
       case 'number':
         h += `
-          <div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--number-field js-show-label"> 
+          <div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--number-field js-show-label" ${c}> 
               <div class="t-Form-labelContainer"> 
-                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('value')}</label> 
+                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label> 
               </div> 
               <div class="t-Form-inputContainer"> 
                   <div class="t-Form-itemWrapper">                       
@@ -427,9 +434,9 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id) {
 
       default:
         h += `
-          <div class="t-Form-fieldContainer t-Form-fieldContainer--floatingLabel apex-item-wrapper apex-item-wrapper--text-field js-show-label"> 
+          <div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--text-field js-show-label" ${c}> 
               <div class="t-Form-labelContainer"> 
-                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${translate('Value')}</label> 
+                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label> 
               </div> 
               <div class="t-Form-inputContainer"> 
                   <div class="t-Form-itemWrapper"> 

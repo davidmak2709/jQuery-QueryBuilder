@@ -114,8 +114,8 @@ QueryBuilder.define('not-group', function (options) {
         e.value.not = !!data.not;
     });
 }, {
-    icon_unchecked: 'fa fa-square-o',
-    icon_checked: 'fa fa-check-square',
+    icon_unchecked: 't-Icon t-Icon--left fa fa-square-o',
+    icon_checked: 't-Icon t-Icon--left fa fa-check-square',
     disable_template: false
 });
 

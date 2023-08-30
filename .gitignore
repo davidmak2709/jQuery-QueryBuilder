@@ -8,3 +8,4 @@ doc
 *.iml
 yarn.lock
 package-lock.json
+.temp

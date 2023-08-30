@@ -700,13 +700,13 @@ QueryBuilder.prototype.createRuleInput = function (rule) {
     var filter = rule.filter;
 
     for (var i = 0; i < rule.operator.nb_inputs; i++) {
-        var $ruleInput = $($.parseHTML($.trim(this.getRuleInput(rule, i))));
+        var $ruleInput = $($.parseHTML(String(this.getRuleInput(rule, i, rule.operator.nb_inputs)).trim()));
         if (i > 0) $valueContainer.append(this.settings.inputs_separator);
         $valueContainer.append($ruleInput);
         $inputs = $inputs.add($ruleInput);
     }
 
-    $valueContainer.css('display', '');
+    $valueContainer.css('display', 'flex');
 
     $inputs.on('change ' + (filter.input_event || ''), function () {
         if (!rule._updating_input) {
@@ -717,7 +717,7 @@ QueryBuilder.prototype.createRuleInput = function (rule) {
     });
 
     if (filter.plugin) {
-        $inputs[filter.plugin](filter.plugin_config || {});
+        $inputs.find(':input:first')[filter.plugin](filter.plugin_config || {});
     }
 
     /**
@@ -786,7 +786,7 @@ QueryBuilder.prototype.updateRuleOperator = function (rule, previousOperator) {
         rule.__.value = undefined;
     }
     else {
-        $valueContainer.css('display', '');
+        $valueContainer.css('display', 'flex');
 
         if ($valueContainer.is(':empty') || !previousOperator ||
             rule.operator.nb_inputs !== previousOperator.nb_inputs ||
