@@ -191,10 +191,32 @@ QueryBuilder.DEFAULTS = {
     ],
 
     icons: {
-        add_group: 'fa fa-plus',
-        add_rule: 'fa fa-plus',
-        remove_group: 'fa fa-trash-o',
-        remove_rule: 'fa fa-trash-o',
+        add_group: 't-Icon t-Icon--left fa fa-plus',
+        add_rule: 't-Icon t-Icon--left fa fa-plus',
+        remove_group: 't-Icon t-Icon--left fa fa-trash-o',
+        remove_rule: 't-Icon fa fa-trash-o',
         error: 'fa fa-exclamation-triangle'
+    },
+
+    button: {
+        text_with_icon: 't-Button t-Button--small t-Button--icon t-Button--iconLeft',
+        icon: 't-Button t-Button--small t-Button--noLabel t-Button--icon'
+    },
+    /*
+    // Optional above
+    field: {
+        before_label_and_item: 't-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs',
+        before_label: 't-Form-labelContainer',
+        label: 't-Form-label'
     }
+    */
+
+    
+    // Hidden (+ large items)   
+    field: {
+        before_label_and_item: 't-Form-fieldContainer t-Form-fieldContainer--hiddenLabel rel-col t-Form-fieldContainer--stretchInputs t-Form-fieldContainer--large',
+        before_label: 't-Form-labelContainer t-Form-labelContainer--hiddenLabel',
+        label: 't-Form-label u-VisuallyHidden'
+    }
+    
 };

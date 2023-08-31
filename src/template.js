@@ -1,18 +1,18 @@
-QueryBuilder.templates.group =`
+QueryBuilder.templates.group = `
 <div id="{{= it.group_id }}" class="rules-group-container"> 
     <div class="rules-group-header"> 
         <div class="u-pullRight group-actions"> 
-          <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-add="rule"> 
-            <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.add_rule }}"></span>{{= it.translate("add_rule") }} 
+          <button type="button" class="{{= it.button.text_with_icon }}" data-add="rule"> 
+            <span aria-hidden="true" class="{{= it.icons.add_rule }}"></span>{{= it.translate("add_rule") }} 
           </button> 
           {{? it.settings.allow_groups===-1 || it.settings.allow_groups>=it.level }} 
-            <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-add="group"> 
-                <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.add_group }}"></span>{{= it.translate("add_group") }} 
+            <button type="button" class="{{= it.button.text_with_icon }}" data-add="group"> 
+                <span aria-hidden="true" class=" {{= it.icons.add_group }}"></span>{{= it.translate("add_group") }} 
             </button> 
           {{?}} 
           {{? it.level>1 }} 
-            <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-delete="group"> 
-                <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.remove_group }}"></span>{{= it.translate("delete_group") }} 
+            <button type="button" class="{{= it.button.text_with_icon }}" data-delete="group"> 
+                <span aria-hidden="true" class="{{= it.icons.remove_group }}"></span>{{= it.translate("delete_group") }} 
             </button> 
           {{?}} 
         </div> 
@@ -52,8 +52,8 @@ QueryBuilder.templates.rule = `
 <div id="{{= it.rule_id }}" class="rule-container">
     <div class="rule-header">
         <div class="u-pullRight rule-actions">
-            <button type="button" class="t-Button t-Button--small t-Button--noLabel t-Button--icon t-Button--iconLeft" data-delete="rule">
-                <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.remove_rule }}"></span>
+            <button type="button" class="{{= it.button.icon }}" data-delete="rule">
+                <span aria-hidden="true" class="{{= it.icons.remove_rule }}"></span>
             </button>
         </div>
     </div>
@@ -74,9 +74,9 @@ QueryBuilder.templates.rule = `
 
 QueryBuilder.templates.filterSelect = `
 {{ var optgroup = null; }} 
-<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--select-list js-show-label">
-     <div class="t-Form-labelContainer">
-         <label for="{{= it.rule.id }}_filter" id="{{= it.rule.id }}_filter_LABEL" class="t-Form-label">
+<div class="{{= it.field.before_label_and_item }} apex-item-wrapper apex-item-wrapper--select-list js-show-label">
+     <div class="{{= it.field.before_label }}">
+         <label for="{{= it.rule.id }}_filter" id="{{= it.rule.id }}_filter_LABEL" class="{{= it.field.label }}">
             {{= it.translate("filter") }}
         </label>
      </div>
@@ -104,9 +104,9 @@ QueryBuilder.templates.filterSelect = `
 
 QueryBuilder.templates.operatorSelect = `
 {{? it.operators[0].type !== 'hidden' }}
-<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
-    <div class="t-Form-labelContainer"> 
-        <label for="{{= it.rule.id }}_operator" id="{{= it.rule.id }}_operator_LABEL" class="t-Form-label">
+<div class="{{= it.field.before_label_and_item }} apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
+    <div class="{{= it.field.before_label }}"> 
+        <label for="{{= it.rule.id }}_operator" id="{{= it.rule.id }}_operator_LABEL" class="{{= it.field.label }}">
             {{= it.translate("operator") }}
         </label> 
     </div> 
@@ -137,9 +137,9 @@ QueryBuilder.templates.operatorSelect = `
 `;
 
 QueryBuilder.templates.ruleValueSelect = `
-<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
-    <div class="t-Form-labelContainer"> 
-        <label for="{{= it.rule.id }}_value" id="{{= it.rule.id }}_value_LABEL" class="t-Form-label">
+<div class="{{= it.field.before_label_and_item }} apex-item-wrapper apex-item-wrapper--select-list js-show-label"> 
+    <div class="{{= it.field.before_label }}"> 
+        <label for="{{= it.rule.id }}_value" id="{{= it.rule.id }}_value_LABEL" class="{{= it.field.label }}">
             {{= it.translate("value") }}
         </label> 
     </div> 
@@ -174,7 +174,7 @@ QueryBuilder.templates.ruleValueSelect = `
  * @fires QueryBuilder.changer:getGroupTemplate
  * @private
  */
-QueryBuilder.prototype.getGroupTemplate = function (group_id, level) {
+QueryBuilder.prototype.getGroupTemplate = function (group_id, level) {  
   var h = this.templates.group({
     builder: this,
     group_id: group_id,
@@ -182,7 +182,8 @@ QueryBuilder.prototype.getGroupTemplate = function (group_id, level) {
     conditions: this.settings.conditions,
     icons: this.icons,
     settings: this.settings,
-    translate: this.translate.bind(this)
+    translate: this.translate.bind(this),
+    button: this.button
   });
 
   /**
@@ -210,6 +211,7 @@ QueryBuilder.prototype.getRuleTemplate = function (rule_id) {
     icons: this.icons,
     settings: this.settings,
     translate: this.translate.bind(this),
+    button: this.button,
     expandFilterSelector: this.filters.every( v => v.type === 'hidden' && v.input === 'hidden')
   });
 
@@ -238,7 +240,8 @@ QueryBuilder.prototype.getRuleFilterSelect = function (rule, filters) {
     filters: filters,
     icons: this.icons,
     settings: this.settings,
-    translate: this.translate.bind(this)
+    translate: this.translate.bind(this),
+    field: this.field
   });
 
   /**
@@ -268,7 +271,8 @@ QueryBuilder.prototype.getRuleOperatorSelect = function (rule, operators) {
     operators: operators,
     icons: this.icons,
     settings: this.settings,
-    translate: this.translate.bind(this)
+    translate: this.translate.bind(this),
+    field: this.field
   });
 
   /**
@@ -298,6 +302,7 @@ QueryBuilder.prototype.getRuleValueSelect = function (name, rule) {
     rule: rule,
     icons: this.icons,
     settings: this.settings,
+    field: this.field,
     translate: this.translate.bind(this)
   });
 
@@ -329,6 +334,7 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id, nb_inputs) {
   var h = '';
   var placeholder = Array.isArray(filter.placeholder) ? filter.placeholder[value_id] : filter.placeholder;
   var translate = this.translate.bind(this);
+  var fieldOptions = this.field;
 
   var label = translate('value');
   if(nb_inputs === 2 && value_id === 0) {
@@ -344,10 +350,10 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id, nb_inputs) {
     switch (filter.input) {
       case 'radio':
       case 'checkbox':
-        h += `<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--${filter.input === 'checkbox' ? 'checkbox' : 'radiogroup'}" ${c}>`;
+        h += `<div class="${fieldOptions.before_label_and_item} apex-item-wrapper apex-item-wrapper--${filter.input === 'checkbox' ? 'checkbox' : 'radiogroup'}" ${c}>`;
         h += `
-          <div class="t-Form-labelContainer">
-            <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label>
+          <div class="${fieldOptions.before_label}">
+            <label for="${name}" id="${name}_LABEL" class="${fieldOptions.label}">${label}</label>
           </div>
           <div class="t-Form-inputContainer">
             <div class="t-Form-itemWrapper">
@@ -380,19 +386,17 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id, nb_inputs) {
 
       case 'textarea':
         h += `
-          <div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--textarea js-show-label" id="${name}_CONTAINER" ${c}>
-            <div class="t-Form-labelContainer">
-              <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label>
+          <div class="${fieldOptions.before_label_and_item} apex-item-wrapper apex-item-wrapper--textarea js-show-label" id="${name}_CONTAINER" ${c}>
+            <div class="${fieldOptions.before_label}">
+              <label for="${name}" id="${name}_LABEL" class="${fieldOptions.label}">${label}</label>
             </div>
             <div class="t-Form-inputContainer">
               <div class="t-Form-itemWrapper">
                 <div class="apex-item-group apex-item-group--textarea">
-                  <textarea name="${name}" 
-                    rows="5" 
-                    cols="30"                     
+                  <textarea name="${name}"                      
                     ${placeholder ? 'placeholder="' + placeholder + '"' : ''}
-                    ${filter.size ? 'cols="' + filter.size + '"' : ''}
-                    ${filter.rows ? 'rows="' + filter.rows + '"' : ''}
+                    ${filter.size ? 'cols="' + filter.size + '"' : '30'}
+                    ${filter.rows ? 'rows="' + filter.rows + '"' : '5'}
                     ${filter.type === 'string' && validation.min !== undefined ? 'minlength="' + validation.min + '"' : ''}
                     ${filter.type === 'string' && validation.max !== undefined ? 'maxlength="' + validation.max + '"' : ''}
                     class="textarea apex-item-textarea" 
@@ -407,9 +411,9 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id, nb_inputs) {
         break;
       case 'number':
         h += `
-          <div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--number-field js-show-label" ${c}> 
-              <div class="t-Form-labelContainer"> 
-                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label> 
+          <div class="${fieldOptions.before_label_and_item} apex-item-wrapper apex-item-wrapper--number-field js-show-label" ${c}> 
+              <div class="${fieldOptions.before_label}"> 
+                  <label for="${name}" id="${name}_LABEL" class="${fieldOptions.label}">${label}</label> 
               </div> 
               <div class="t-Form-inputContainer"> 
                   <div class="t-Form-itemWrapper">                       
@@ -434,9 +438,9 @@ QueryBuilder.prototype.getRuleInput = function (rule, value_id, nb_inputs) {
 
       default:
         h += `
-          <div class="t-Form-fieldContainer t-Form-fieldContainer--stacked t-Form-fieldContainer--stretchInputs apex-item-wrapper apex-item-wrapper--text-field js-show-label" ${c}> 
-              <div class="t-Form-labelContainer"> 
-                  <label for="${name}" id="${name}_LABEL" class="t-Form-label">${label}</label> 
+          <div class="${fieldOptions.before_label_and_item} apex-item-wrapper apex-item-wrapper--text-field js-show-label" ${c}> 
+              <div class="${fieldOptions.before_label}"> 
+                  <label for="${name}" id="${name}_LABEL" class="${fieldOptions.label}">${label}</label> 
               </div> 
               <div class="t-Form-inputContainer"> 
                   <div class="t-Form-itemWrapper"> 

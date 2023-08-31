@@ -34,7 +34,7 @@ QueryBuilder.define('invert', function(options) {
             var $h = $($.parseHTML(h.value));
             $h.find(Selectors.condition_container).after(
                 `
-                <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-invert="group">
+                <button type="button" class="${options.button}" data-invert="group">
                     <span aria-hidden="true" class="t-Icon t-Icon--left ${options.icon}"></span>
                     ${self.translate('invert')}
                 </button>
@@ -48,8 +48,8 @@ QueryBuilder.define('invert', function(options) {
                 var $h = $($.parseHTML(h.value));
                 $h.find(Selectors.rule_actions).prepend(
                     `
-                    <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-invert="rule">
-                        <span aria-hidden="true" class="t-Icon t-Icon--left ${options.icon}"></span>
+                    <button type="button" class="${options.button}" data-invert="rule">
+                        <span aria-hidden="true" class="${options.icon}"></span>
                         ${self.translate('invert')}
                     </button>
                     `
@@ -59,7 +59,8 @@ QueryBuilder.define('invert', function(options) {
         }
     }
 }, {
-    icon: 'fa fa-random',
+    icon: 't-Icon t-Icon--left fa fa-random',
+    button:'t-Button t-Button--small t-Button--icon t-Button--iconLeft',
     recursive: true,
     invert_rules: true,
     display_rules_button: false,

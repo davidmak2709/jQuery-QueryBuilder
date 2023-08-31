@@ -35,8 +35,8 @@ QueryBuilder.define('not-group', function (options) {
             var $h = $($.parseHTML(h.value));
             $h.find(QueryBuilder.selectors.condition_container).prepend(
                 `
-                <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-not="group">
-                    <span aria-hidden="true" class="t-Icon t-Icon--left ${options.icon_unchecked}"></span>${self.translate('NOT')}
+                <button type="button" class="${options.button}" data-not="group">
+                    <span aria-hidden="true" class="${options.icon_unchecked}"></span>${self.translate('NOT')}
                 </button>
                 `
             );
@@ -114,6 +114,7 @@ QueryBuilder.define('not-group', function (options) {
         e.value.not = !!data.not;
     });
 }, {
+    button:'t-Button t-Button--small t-Button--icon t-Button--iconLeft',
     icon_unchecked: 't-Icon t-Icon--left fa fa-square-o',
     icon_checked: 't-Icon t-Icon--left fa fa-check-square',
     disable_template: false

@@ -166,8 +166,8 @@ QueryBuilder.define('sortable', function (options) {
                 $h.find(QueryBuilder.selectors.condition_container)
                     .after(`
                     <div class="drag-handle">
-                        <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--small t-Button--noLabel t-Button--icon">
-                            <span aria-hidden="true" class="t-Icon ${options.icon}"></span>
+                        <button type="button" title="Sort" aria-label="Sort" class="${options.button}">
+                            <span aria-hidden="true" class="${options.icon}"></span>
                         </button>
                     </div>
                     `);
@@ -180,8 +180,8 @@ QueryBuilder.define('sortable', function (options) {
             $h.find(QueryBuilder.selectors.rule_header)
                 .after(`
                 <div class="drag-handle">
-                    <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--small t-Button--noLabel t-Button--icon">
-                        <span aria-hidden="true" class="t-Icon ${options.icon}"></span>
+                    <button type="button" title="Sort" aria-label="Sort" class="${options.button}">
+                        <span aria-hidden="true" class="${options.icon}"></span>
                     </button>
                 </div>
                 `);
@@ -191,7 +191,8 @@ QueryBuilder.define('sortable', function (options) {
 }, {
     inherit_no_sortable: true,
     inherit_no_drop: true,
-    icon: 'fa fa-sort',
+    icon: 't-Icon fa fa-sort',
+    button: 't-Button t-Button--small t-Button--noLabel t-Button--icon',
     disable_template: false
 });
 

@@ -75,6 +75,20 @@ var QueryBuilder = function ($el, options) {
     this.icons = this.settings.icons;
 
     /**
+     * List of button CSS classes
+     * @member {object.<string, string>}
+     * @readonly 
+     */
+    this.button = this.settings.button;
+
+    /**
+     * List of fields CSS classes
+     * @member {object.<string, string>}
+     * @readonly 
+     */
+    this.field = this.settings.field;
+
+    /**
      * List of operators
      * @member {QueryBuilder.Operator[]}
      * @readonly
