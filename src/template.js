@@ -25,8 +25,8 @@ QueryBuilder.templates.group = `
                                 <div class="apex-item-grid-row">
                                     {{~ it.conditions: condition }}
                                         <div class="apex-item-option">
-                                            <input type="radio" name="{{= it.group_id }}_cond" data-display="{{= it.translate("conditions", condition) }}" value="{{= condition }}">
-                                                <label class="u-radio" for="{{= it.group_id }}_{{= condition }}_cond">{{= it.translate("conditions", condition) }}</label>
+                                            <input type="radio" id="{{= it.group_id }}_{{= condition }}_cond" name="{{= it.group_id }}_cond" data-display="{{= it.translate("conditions", condition) }}" value="{{= condition }}">
+                                            <label class="u-radio" for="{{= it.group_id }}_{{= condition }}_cond">{{= it.translate("conditions", condition) }}</label>
                                         </div>
                                     {{~}}
                                 </div>
@@ -45,7 +45,7 @@ QueryBuilder.templates.group = `
     <div class="rules-group-body margin-top-md">
         <div class=rules-list></div>
     </div>
-</div>
+</div> 
 `;
 
 QueryBuilder.templates.rule = `
