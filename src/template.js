@@ -2,16 +2,16 @@ QueryBuilder.templates.group =`
 <div id="{{= it.group_id }}" class="rules-group-container"> 
     <div class="rules-group-header"> 
         <div class="u-pullRight group-actions"> 
-          <button type="button" class="t-Button t-Button--icon t-Button--iconLeft" data-add="rule"> 
+          <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-add="rule"> 
             <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.add_rule }}"></span>{{= it.translate("add_rule") }} 
           </button> 
           {{? it.settings.allow_groups===-1 || it.settings.allow_groups>=it.level }} 
-            <button type="button" class="t-Button t-Button--icon t-Button--iconLeft" data-add="group"> 
+            <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-add="group"> 
                 <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.add_group }}"></span>{{= it.translate("add_group") }} 
             </button> 
           {{?}} 
           {{? it.level>1 }} 
-            <button type="button" class="t-Button t-Button--icon t-Button--iconLeft" data-delete="group"> 
+            <button type="button" class="t-Button t-Button--small t-Button--icon t-Button--iconLeft" data-delete="group"> 
                 <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.remove_group }}"></span>{{= it.translate("delete_group") }} 
             </button> 
           {{?}} 
@@ -52,7 +52,7 @@ QueryBuilder.templates.rule = `
 <div id="{{= it.rule_id }}" class="rule-container">
     <div class="rule-header">
         <div class="u-pullRight rule-actions">
-            <button type="button" class="t-Button t-Button--noLabel t-Button--icon t-Button--iconLeft" data-delete="rule">
+            <button type="button" class="t-Button t-Button--small t-Button--noLabel t-Button--icon t-Button--iconLeft" data-delete="rule">
                 <span aria-hidden="true" class="t-Icon t-Icon--left {{= it.icons.remove_rule }}"></span>
             </button>
         </div>

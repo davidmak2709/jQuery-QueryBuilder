@@ -166,7 +166,7 @@ QueryBuilder.define('sortable', function (options) {
                 $h.find(QueryBuilder.selectors.condition_container)
                     .after(`
                     <div class="drag-handle">
-                        <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--noLabel t-Button--icon">
+                        <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--small t-Button--noLabel t-Button--icon">
                             <span aria-hidden="true" class="t-Icon ${options.icon}"></span>
                         </button>
                     </div>
@@ -180,7 +180,7 @@ QueryBuilder.define('sortable', function (options) {
             $h.find(QueryBuilder.selectors.rule_header)
                 .after(`
                 <div class="drag-handle">
-                    <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--noLabel t-Button--icon">
+                    <button type="button" title="Sort" aria-label="Sort" class="t-Button t-Button--small t-Button--noLabel t-Button--icon">
                         <span aria-hidden="true" class="t-Icon ${options.icon}"></span>
                     </button>
                 </div>

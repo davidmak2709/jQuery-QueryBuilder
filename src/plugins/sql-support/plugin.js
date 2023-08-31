@@ -311,7 +311,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                             else if (!stmt && rule.type !== 'integer' && rule.type !== 'double' && rule.type !== 'boolean') {
                                 v = Utils.escapeString(v, sql.escape);
                             }
-
+                            
                             if (sql.mod) {
                                 v = Utils.fmt(sql.mod, v);
                             }
@@ -320,9 +320,12 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                                 value += stmt.add(rule, v);
                             }
                             else {
-                                if (typeof v == 'string') {
-                                    v = '\'' + v + '\'';
+                                if(typeof v == 'string' && (rule.type == 'date' || rule.type == 'datetime')) {
+                                    v = 'TO_DATE(\'' + v + '\', \''+ rule.format +'\')';
                                 }
+                                else if (typeof v == 'string') {
+                                    v = '\'' + v + '\'';
+                                }                               
 
                                 value += v;
                             }
