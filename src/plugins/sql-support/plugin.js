@@ -321,7 +321,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
                             }
                             else {
                                 if(typeof v == 'string' && (rule.type == 'date' || rule.type == 'datetime')) {
-                                    v = 'TO_DATE(\'' + v + '\', \''+ rule.format +'\')';
+                                    v = rule.type_prefix + '\'' + v + '\'';
                                 }
                                 else if (typeof v == 'string') {
                                     v = '\'' + v + '\'';
@@ -540,7 +540,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
 
                 // convert array
                 var value;
-                if ($.isArray(data.right.value)) {
+                if (Array.isArray(data.right.value)) {
                     value = data.right.value.map(function (v) {
                         return v.value;
                     });
@@ -551,7 +551,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
 
                 // get actual values
                 if (stmt) {
-                    if ($.isArray(value)) {
+                    if (Array.isArray(value)) {
                         value = value.map(stmt.parse);
                     }
                     else {

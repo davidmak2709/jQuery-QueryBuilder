@@ -269,7 +269,8 @@ QueryBuilder.prototype.getRules = function(options) {
                 input: rule.filter ? rule.filter.input : null,
                 operator: rule.operator ? rule.operator.type : null,
                 value: value,
-                format: rule.filter && rule.filter.validation ? rule.filter.validation.format : null                
+                format: rule.filter && rule.filter.validation ? rule.filter.validation.format : null,
+                type_prefix: rule.filter ? rule.filter.type_prefix : null                  
             };
 
             if (rule.filter && rule.filter.data || rule.data) {
